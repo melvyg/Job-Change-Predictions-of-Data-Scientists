@@ -1,4 +1,5 @@
 # Stay or Go: Job Change Predictions of Data Scientists
+![Visual1](./images/21-UNBOX-jumbo.jpg)
 **Author**: Melvin Garcia
 
 ## Overview
@@ -151,7 +152,7 @@ Based on the presented analysis, there are more steps we can take to improve our
 
 ## For More Information
 
-Please review our full analysis in [our Jupyter Notebook](./0-HR Analytics-Job Change of Data Scientists.ipynb) or our [presentation](./KingsCounty_HousingAnalysis_Flatiron_Presentation_MG.pdf).
+Please review our full analysis in [our Jupyter Notebook](./0-HR Analytics-Job Change of Data Scientists.ipynb) or our [presentation](./DSJobChange_HRAnalytics_Flatiron_Presentation_MG.pdf).
 
 For any additional questions, please contact **Melvin Garcia garciamelvin4@gmail.com**
 
