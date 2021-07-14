@@ -1,113 +1,168 @@
+# Stay or Go: Job Change Predictions of Data Scientists
+**Author**: Melvin Garcia
 
-# Phase 3 Project
+## Overview
+The aim of this report is to understand the factors that lead a person participating in a company's data science training to either work for their company or look for new employment. The goal is to build a model  using data containing information about a person in data science training. Data points include current credentials, demographics, experience, and training hours. The end result of the model is to provide a probability value that this person will look for a new job or work for the company.
 
-Congratulations! You've made it through another _intense_ module, and now you're ready to show off your newfound Machine Learning skills!
+## Business Problem
+A company in the business of big data and data science is looking to hire data scientists participating in the courses conducted by said company. Based on characteristics of the individual such as their credentials, demographics, previous work experience, and how long they have been training -- the company wants to understand whether they will work for them after training has completed, or if they will look for new employment. By understanding their predilection for employment, it wil help the company reduce the cost, time, and reform the quality of their training. 
 
-![awesome](https://raw.githubusercontent.com/learn-co-curriculum/dsc-phase-3-project/main/images/smart.gif)
+## Data
+The data used for this report comes from the human resources department containing personal information about the persons participating in the company's data science training. Data points include: 
+- The city the participant is working from
+- City development index which measures the level of development on a scale between 0 and 1.
+- Relevent experience
+- Whether the participant is enrolled in a university
+- Education level
+- The participant's university major
+- Years of work experience
+- Company size
+- Company type
+- Years from when the participant last had a new job
+- The number of training hours a participant has done
 
-All that remains in Phase 3 is to put your new skills to use with another large project! This project should take 20 to 30 hours to complete.
+One characteristic of this dataset is the imbalance of our target variable -- a binary True / False of whether a participant will look for a new job change (1) or they are not looking for a new job change (0). Due the imbalance, during training and testing of the model, I aim to use a stratified k-fold technique to ensure the appropriate proportions of the target variables are used to ensure a more representive sample during training. Another note about this dataset are around the data types we're working with. Specifically, that is the amount categorical data included, and ensuring we encode our columns appropriately as nominal or ordinal. Lastly, there is as much as 30% of missing data in respect to the total number of rows contained within the company size and type columns in respect 
 
-## Project Overview
+## Methods
+The overall steps to set up our data and perform iterative modeling is to:
+1. Prepare & Explore the data
+2. Clean and transform the data
+3. Prepare simple models to evaluate
+4. Hyperparameter optimization, and evaluation
 
-For this project, you will engage in the full data science process from start to finish, solving a classification problem using a dataset of your choice.
+**Preparing and Exploring the data**
 
-### The Data
+During our data preparation and exploration step, our aim is to gain an impression of the data and understand the data types, distributions, and amount of missing data we are working with. Based on what we are able to observe, we are then able to develop a strategy on how we would like to approach the data intricacies we ecounter so that for the models we test, and use -- the results are interpretable. For example, skewed distributions, encoding our categorical features appropriately for nominal vs ordinal data, and lastly how we would approach imputing missing data.
 
-You have the option to either **choose a dataset from a curated list** or **choose your own dataset _not on the list_**. The goal is to choose a dataset appropriate to the type of business problem and/or classification methods that most interests you. It is up to you to define a stakeholder and business problem appropriate to the dataset you choose. If you are feeling overwhelmed or behind, we recommend you choose dataset #2 or #3 from the curated list.
+**Clean and transform the data**
 
-If you choose a dataset from the curated list, **inform your instructor which dataset you chose** and jump right into the project. If you choose your own dataset, **run the dataset and business problem by your instructor for approval** before starting your project.
+Following data exploration, we would now execute on our strategy for cleaning the data. The most pressing data quality issue discovered within this dataset are the amount of missing values. For example, within the company size and company type features, it was discovered that ~30% of the total rows of the dataset were missing from these two columns. 
 
-### Curated List of Datasets
+We tested three methods of missing value imputation against a simple logistic regression model. The three methods that we tested were: 
+1. Simply dropping all missing values
+2. Creating a new category called 'missing' to replace the missing values. This is doable since company type and size are categorical feature types.
+3. The second method is replacing missing values with the most frequent value within its respective column.
 
-You may select any of the four datasets below - we provide brief descriptions of each. Follow the links to learn more about the dataset and business problems before making a final decision.
+Based on the results of those two methods, we moved forward with the simple model that showcased a higher accuracy score. 
 
-#### 1) [Chicago Car Crashes](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Crashes/85ca-t3if)
-Note this links also to [Vehicle Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Vehicles/68nd-jvt3) and to [Driver/Passenger Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-People/u6pd-qa9d).
+For handling the skewed distributions within the numeric feature types -- training hours and city development index, we elected to use a log and power transformation respectively to make the distributions more gaussian. 
 
-Build a classifier to predict the primary contributory cause of a car accident, given information about the car, the people in the car, the road conditions etc. You might imagine your audience as a Vehicle Safety Board who's interested in reducing traffic accidents, or as the City of Chicago who's interested in becoming aware of any interesting patterns. Note that there is a **multi-class** classification problem. You will almost certainly want to bin or trim or otherwise limit the number of target categories on which you ultimately predict. Note e.g. that some primary contributory causes have very few samples.
+**Prepare simple models to evaluate**
 
-#### 2) [Terry Traffic Stops](https://catalog.data.gov/dataset/terry-stops)
-In [*Terry v. Ohio*](https://www.oyez.org/cases/1967/67), a landmark Supreme Court case in 1967-8, the court found that a police officer was not in violation of the "unreasonable search and seizure" clause of the Fourth Amendment, even though he stopped and frisked a couple of suspects only because their behavior was suspicious. Thus was born the notion of "reasonable suspicion", according to which an agent of the police may e.g. temporarily detain a person, even in the absence of clearer evidence that would be required for full-blown arrests etc. Terry Stops are stops made of suspicious drivers.
+After preparing a strategy on how we'd like to handle the discovered intricacies of the data (missing values, categorical encoding, and numeric transformations) -- we prepared a pipeline to follow our data transformation strategy and run against a series of simple models.
 
-Build a classifier to predict whether an arrest was made after a Terry Stop, given information about the presence of weapons, the time of day of the call, etc. Note that this is a **binary** classification problem.
+The simple models tested include:
+- Logistic Regression
+- Support Vector Machine
+- Decision Tree Classifier
+- Random Forest
+- XG Boost
 
-Note that this dataset also includes information about gender and race. You **may** use this data as well. You may, e.g. pitch your project as an inquiry into whether race (of officer or of subject) plays a role in whether or not an arrest is made.
+Specifically, below are the steps performed to prepare and evaluate our simple models:
+1. Instantiate our models without hyperparameter tuning
+2. Given the imblanced distribution between our target variables, employ a stratified KFold sampling technique to ensure that within the different k folds of the train and test sets, we are testing against representative sample distributions of our target. 
+3. Loop over our list of simple models and record the model accuracy against our train and test samples to also evaluate overfitting.
+4. Lastly, choose at least 1-2 models to iterate on and perform hyperparameter tuning.
 
-If you **do** elect to make use of race or gender data, be aware that this can make your project a highly sensitive one; your discretion will be important, as well as your transparency about how you use the data and the ethical issues surrounding it.
+**Hyperparameter optimization, and evaluation**
 
-#### 3) [SyriaTel Customer Churn](https://www.kaggle.com/becksddf/churn-in-telecoms-dataset)
+Lastly, after our simple model evaluation, we selected LogisticRegression and XGBoost to move forward with. We selected these 2 because logistic regression as a simple model exhibited the highest accuracy score, and XGBoost because we can take advantage of the powerful and fast hyperparameter tunining methods contained within the Optuna (https://optuna.org/) python library.
 
-Build a classifier to predict whether a customer will ("soon") stop doing business with SyriaTel, a telecommunications company. Note that this is a **binary** classification problem.
+After retrieving the best hyperparameters for both of these models, we again evaluate them on their classification performance -- accuracy and shape of their respective precision-recall curves, and move forward with a final model.
 
-Most naturally, your audience here would be the telecom business itself, interested in losing money on customers who don't stick around very long. Are there any predictable patterns here?
+## Results
 
-#### 4) [Tanzanian Water Well Data](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
-This dataset is part of an *active competition* until April 31, 2021!
+### Target Class Distribution
+![graph5](./images/TargetDistribution.png)
+As we can see, there is large imbalance between our target variables with our 0 class making up as much as 75% of the total number of instances in the dataset. Therefore, when evaluating our models, we need to not only include accuracy as a metric, but also precision and recall.
 
-Tanzania, as a developing country, struggles with providing clean water to its population of over 57,000,000. There are many waterpoints already established in the country, but some are in need of repair while others have failed altogether.
+### Missing Value Matrix
+![graph6](./images/MissingValueMatrix.jpg)
+Most missing values seem to come from 4 features: company_type, company_size, gender, and major_discipline 
 
-Build a classifier to predict the condition of a water well, using information about the sort of pump, when it was installed, etc. Note that this is a **ternary** classification problem.
+Because of the amount of missing columns, we will attempt a couple of methods to working with the missing data.
 
-### Sourcing Your Own Data
+1. Use a Sklearn's SimpleImputer and replace missing values with 'most frequent'
+2. Create an entirely new category called 'missing'
 
-Sourcing new data is a valuable skill for data scientists, but it requires a great deal of care. An inappropriate dataset or an unclear business problem can lead you spend a lot of time on a project that delivers underwhelming results. The guidelines below will help you complete a project that demonstrates your ability to engage in the full data science process.
+We will use these two methods for our pipeline.
 
-Your dataset must be...
+### Training Hours Transformations for Modeling
+![graph7](./images/TrainingHours_BeforeAfterTransformation.jpg)
+In the left hand image -- There is an apparent right skew in training hours. In the right image, we apply a log transformation to make the distribution more gaussian and suitable for modeling. 
 
-1. **Appropriate for classification.** It should have a categorical outcome or the data needed to engineer one.   
+### City Development Index Transformations for Modeling
+![graph8](./images/CityDevIndex_BeforeAfterTransformation.png)
+In the left hand image -- There appears to be a bimodal peaks with a left skew on the city_development_index column. Applying a power transformation in the right hand image appears to work better in making the distribution more gaussian,however the bimodal peak is still apparent.
 
-2. **Usable to solve a specific business problem.** This solution must rely on your classification model.
+### Missing Value Imputation - Simple LR Model ROC AUC Comparison 
+![graph10](./images/MidRange_LogHousePrice_LocationHeatmap_DowntownMarker_LatBorders.png)
+Running a simple logistic regression model against the two missing value imputation methods produce very similar scores. However, performing the missing value imputation of creating a new category called 'missing' produces a slightly higher ROC AUC score of 0.647 compared to most frequent imputation ROC AUC score of 0.634. 
 
-3. **Somewhat complex.** It should contain a minimum of 1000 rows and 10 features.
+Moreover, the accuracy scores reported for both imputation methods received a score of 77%.
 
-4. **Unfamiliar.** It can't be one we've already worked with during the course or that is commonly used for demonstration purposes (e.g. MNIST).
+### Simply Dropping Missing Values
+![graph13](./images/LR_ROCCurve_drop.jpg)
+Compared to the missing value imputation methods above, it appears that by simply dropping the missing values, we are able to increase our accuracy to 85% and our ROC AUC score to 0.719. Therefore based on the presented methods of handling missing values, we may go forward with dropping missing values. 
 
-5. **Manageable.** Stick to datasets that you can model using the techniques introduced in Phase 3.
+It is worth noting that, while dropping missing values improved the performance of our simple model, we did observe a decrease of the number of rows from 19,158 rows to 11,179 -- a 42% reduction.
 
-Once you've sourced your own dataset and identified the business problem you want to solve with it, you must to **run them by your instructor for approval**.
+### Simple Model Evaluations
+![graph14](./images/ScoresbyTrainandTest.jpg)
+Notably, there are signs of overfitting occurring within our DecisionTree, SVM, and XGBoost simple models given the higher train set accuracy scores. Nonetheless, it appears Logistic Regression has the highest average test accuracy score and so this is likely the model we want to move forward with and with an optimize.
 
-#### Problem First, or Data First?
+Moreover, given the popularity, and popular hyperparameter optimization packages available for XGBoost, this is also a model I would like to test and move forward with despite the slight overfitting observed.
 
-There are two ways that you can source your own dataset: **_Problem First_** or **_Data First_**. The less time you have to complete the project, the more strongly we recommend a Data First approach to this project.
+### Feature Importance
+![graph15](./images/FeatureImportances.jpg)
+In order to get a better sense of the features that have a higher relevance in determining whether a participant will work for the data science training company or look for a new job, we used a simple DecisionTreeClassifier and extracted its determined feature importances.
 
-**_Problem First_**: Start with a problem that you are interested in that you could potentially solve with a classification model. Then look for data that you could use to solve that problem. This approach is high-risk, high-reward: Very rewarding if you are able to solve a problem you are invested in, but frustrating if you end up sinking lots of time in without finding appropriate data. To mitigate the risk, set a firm limit for the amount of time you will allow yourself to look for data before moving on to the Data First approach.
+As a result, we are able to observe that the city development index of the city where the participant is from plays the most important role in determining whether they will look for a new job or not. In descending order, the top 6 features include: 
 
-**_Data First_**: Take a look at some of the most popular internet repositories of cool data sets we've listed below. If you find a data set that's particularly interesting for you, then it's totally okay to build your problem around that data set.
+1. City Development Index (from where the participant is from)
+2. Training Hours Completed
+3. Years of Experience
+4. Current Company Size
+5. Difference in years between previous job and current job
+6. Highest Level of Education
 
-There are plenty of amazing places that you can get your data from. We recommend you start looking at data sets in some of these resources first:
+### XGBoost Hyperparameter Optimization with Optuna
+![graph16](./images/XGBoostOptimization.png)
+The plot above showcases the AUC score (y-axis) over the number of trials performed (x-axis). Through the 100 trials performed during hyperparameter tuning, it was observed that at trial 5, we received our highest AUC score of 0.834. From Optuna, we are able to pull the best params and perform final modeling. 
 
-* [UCI Machine Learning Datasets Repository](https://archive.ics.uci.edu/ml/datasets.php)
-* [Kaggle Datasets](https://www.kaggle.com/datasets)
-* [Awesome Datasets Repo on Github](https://github.com/awesomedata/awesome-public-datasets)
-* [New York City Open Data Portal](https://opendata.cityofnewyork.us/)
-* [Inside AirBNB](http://insideairbnb.com/)
+### City Development Index Comparison
+![graph17](./images/CityDevelopmentComparison.jpg)
+In the visual above, I bootstrapped the target variables to generate a distribution over each targets' city development index to provide a comparison of how city development index plays as a factor for whether a person looks for a new job or not after completing data science training. We can observe that people who are not look for a job typically live in better developed cities compared to people in looking for jobs in lower developed cities.
 
-## The Deliverables
+### Training Hours Comparison
+![graph18](./images/TrainingHours_Comparison.jpg)
+In the visual above, I bootstrapped the target variables to generate a distribution over each targets' training hours to provide a comparison of how the number of training hours completed plays as a factor for whether a person looks for a new job or not after completing data science training. We can observe that people who are not looking for a new job typically spend more hours training versus people who are looking for a new job.
 
-There are three deliverables for this project:
+### Experience Level Comparison
+![graph18](./images/ExperienceLevel_Comparison.jpg)
+Lastly, through a similar bootstrapping method used in the above two visuals, I looked at how years of experience play as a factor for people looking for a new job or not. It appears that typically people with 9 years or less experience are more open to looking for new roles compared to people who have 10+ years of experience, where they are more likely to stay put in their current role. 
 
-* A **GitHub repository**
-* A **Jupyter Notebook**
-* A **non-technical presentation**
+## Conclusions
 
-Review the "Project Submission & Review" page in the "Milestones Instructions" topic for instructions on creating and submitting your deliverables. Refer to the rubric associated with this assignment for specifications describing high-quality deliverables.
+Regarding the features that have the most impact of a person's decision into looking for a new role or not, I would highlight City Development Index (city development score of where the employee is from), the number of training hours completed, and the amount of experience an employee has as the top 3 factors. Moreover, from a modeling stand point, I would continue to iterate on the XGBoost model in hopes of collecting more data on people who are looking for a new job to counteract the imbalance of the dataset. Currently, our model is still performing quite poorly on our recall metric -- roughly 0.49 for our class of employees looking for a new role. Given the company's objective to reduce cost, and lost time for employees looking for a new role, we would want to correctly identify employees looking for a new role, and avoid mistaking these employees for those looking to stay. Otherwise, if we think an employee is staying, but in reality they are leaving, then there associated cost and time.
 
-### Key Points
+## Next Steps
+Based on the presented analysis, there are more steps we can take to improve our model. One step is to continue experimenting with other methods of missing data imputation, and build iterative modelling on top of these other methods. Another step that will take a collective effort from the company is prioritizing data quality, and ensuring no further missing data. The last note to best improve the model is to collect more high quality data, especially data on employees looking to leave their role. 
 
-* **Your deliverables should explicitly address each step of the data science process.** Refer to [the Data Science Process lesson](https://github.com/learn-co-curriculum/dsc-data-science-processes) from Topic 19 for more information about process models you can use.
+## For More Information
 
-* **Your Jupyter Notebook should demonstrate an iterative approach to modeling.** This means that you begin with a basic model, evaluate it, and then provide justification for and proceed to a new model. We encourage you to try a bunch of different models: logistic regression, decision trees, or anything else you think would be appropriate.
+Please review our full analysis in [our Jupyter Notebook](./0-HR Analytics-Job Change of Data Scientists.ipynb) or our [presentation](./KingsCounty_HousingAnalysis_Flatiron_Presentation_MG.pdf).
 
-* **You must choose appropriate classification metrics and use them to evaluate your models.** Choosing the right classification metrics is a key data science skill, and should be informed by data exploration and the business problem itself. You must then use this metric to evaluate your model performance using both training and testing data.
+For any additional questions, please contact **Melvin Garcia garciamelvin4@gmail.com**
 
-## Getting Started
+## Repository Structure
 
-Create a new repository for your project to get started. We recommend structuring your project repository similar to the structure in [the Phase 1 Project Template](https://github.com/learn-co-curriculum/dsc-project-template). You can do this either by creating a new fork of that repository to work in or by building a new repository from scratch that mimics that structure.
-
-## Project Submission and Review
-
-Review the "Project Submission & Review" page in the "Milestones Instructions" topic to learn how to submit your project and how it will be reviewed. Your project must pass review for you to progress to the next Phase.
-
-## Summary
-
-This project is an opportunity to expand your data science toolkit by evaluating, choosing, and working with new datasets. Spending time up front making sure you have a good dataset for a solvable problem will help avoid the major problems that can sometimes derail data science projects. You've got this!
+```
+├── README.md                           
+├── 0-HR Analytics-Job Change of Data Scientists.ipynb  
+├── HR Analytics-Job Change of Data Scientists.pdf
+├── DSJobChange_HRAnalytics_Flatiron_Presentation_MG.pdf
+├── aug_train.csv
+├── aug_test.csv
+└── images
+```
