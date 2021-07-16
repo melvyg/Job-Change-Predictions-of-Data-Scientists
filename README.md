@@ -74,7 +74,7 @@ After retrieving the best hyperparameters for both of these models, we again eva
 ## Results
 
 ### Target Class Distribution
-![graph5](./images/TargetDistribution.png)
+![graph5](./images/TargetDistribution.jpg)
 As we can see, there is large imbalance between our target variables with our 0 class making up as much as 75% of the total number of instances in the dataset. Therefore, when evaluating our models, we need to not only include accuracy as a metric, but also precision and recall.
 
 ### Missing Value Matrix
@@ -93,11 +93,11 @@ We will use these two methods for our pipeline.
 In the left hand image -- There is an apparent right skew in training hours. In the right image, we apply a log transformation to make the distribution more gaussian and suitable for modeling. 
 
 ### City Development Index Transformations for Modeling
-![graph8](./images/CityDevIndex_BeforeAfterTransformation.png)
+![graph8](./images/CityDevIndex_BeforeAfterTransformation.jpg)
 In the left hand image -- There appears to be a bimodal peaks with a left skew on the city_development_index column. Applying a power transformation in the right hand image appears to work better in making the distribution more gaussian,however the bimodal peak is still apparent.
 
 ### Missing Value Imputation - Simple LR Model ROC AUC Comparison 
-![graph10](./images/MidRange_LogHousePrice_LocationHeatmap_DowntownMarker_LatBorders.png)
+![graph10](./images/MidRange_LogHousePrice_LocationHeatmap_DowntownMarker_LatBorders.jpg)
 Running a simple logistic regression model against the two missing value imputation methods produce very similar scores. However, performing the missing value imputation of creating a new category called 'missing' produces a slightly higher ROC AUC score of 0.647 compared to most frequent imputation ROC AUC score of 0.634. 
 
 Moreover, the accuracy scores reported for both imputation methods received a score of 77%.
@@ -149,6 +149,11 @@ Regarding the features that have the most impact of a person's decision into loo
 
 ## Next Steps
 Based on the presented analysis, there are more steps we can take to improve our model. One step is to continue experimenting with other methods of missing data imputation, and build iterative modelling on top of these other methods. Another step that will take a collective effort from the company is prioritizing data quality, and ensuring no further missing data. The last note to best improve the model is to collect more high quality data, especially data on employees looking to leave their role. 
+
+## Sources
+- “ROC Curves and Precision Recall Curves for Classification in Python.” Machine Learning Mastery, https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-classification-in-python/
+- “How to Use ROC Curves and Precision-Recall Curves for Classification in Python”, Machine Learning Mastery, https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-classification-in-python/
+- Brownlee, Jason. Data Preparation for Machine Learning: Data Cleaning, Feature Selection, and Data Transforms in Python. V 1.2 Data Preparation for Machine Learning, 2021
 
 ## For More Information
 
