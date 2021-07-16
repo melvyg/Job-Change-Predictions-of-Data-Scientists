@@ -97,7 +97,7 @@ In the left hand image -- There is an apparent right skew in training hours. In 
 In the left hand image -- There appears to be a bimodal peaks with a left skew on the city_development_index column. Applying a power transformation in the right hand image appears to work better in making the distribution more gaussian,however the bimodal peak is still apparent.
 
 ### Missing Value Imputation - Simple LR Model ROC AUC Comparison 
-![graph10](./images/MidRange_LogHousePrice_LocationHeatmap_DowntownMarker_LatBorders.jpg)
+![graph10](./images/LR_Imputation_Compare.png)
 Running a simple logistic regression model against the two missing value imputation methods produce very similar scores. However, performing the missing value imputation of creating a new category called 'missing' produces a slightly higher ROC AUC score of 0.647 compared to most frequent imputation ROC AUC score of 0.634. 
 
 Moreover, the accuracy scores reported for both imputation methods received a score of 77%.
