@@ -157,7 +157,7 @@ Based on the presented analysis, there are more steps we can take to improve our
 
 ## For More Information
 
-Please review our full analysis in [our Jupyter Notebook](./0-HR Analytics-Job Change of Data Scientists.ipynb) or our [presentation](./DSJobChange_HRAnalytics_Flatiron_Presentation_MG.pdf).
+Please review our full analysis in [our Jupyter Notebook](./0-HRAnalytics-JobChangeofDataScientists.ipynb) or our [presentation](./DSJobChange_HRAnalytics_Flatiron_Presentation_MG.pdf).
 
 For any additional questions, please contact **Melvin Garcia garciamelvin4@gmail.com**
 
@@ -165,8 +165,8 @@ For any additional questions, please contact **Melvin Garcia garciamelvin4@gmail
 
 ```
 ├── README.md                           
-├── 0-HR Analytics-Job Change of Data Scientists.ipynb  
-├── HR Analytics-Job Change of Data Scientists.pdf
+├── 0-HRAnalytics-JobChangeofDataScientists.ipynb  
+├── HRAnalytics-JobChangeofDataScientists_Notebook_MG.pdf
 ├── DSJobChange_HRAnalytics_Flatiron_Presentation_MG.pdf
 ├── aug_train.csv
 ├── aug_test.csv
